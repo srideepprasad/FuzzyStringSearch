@@ -9,7 +9,9 @@ class FuzzyStringComparator {
 	def List<SrchResult> fuzzyCompareAndRank(List<String> candidates, String input){
 		List<SrchResult> returnList = []
 		candidates.each { candidate ->
-			returnList.add(new SrchResult(candidate, fuzzyCompare(candidate, input)))
+			double score = fuzzyCompare(candidate, input)
+			if (score > 0)
+				returnList.add(new SrchResult(candidate, score))
 		}
 		
 		Collections.sort(returnList)

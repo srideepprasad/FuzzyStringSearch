@@ -30,22 +30,27 @@ class FuzzyStringComparator {
 		int compareToTokenSize = compareToTokens.size()
 		int candidateTokenSize = candidateTokens.size()
 		int bestPossibleScore = (compareToTokenSize > candidateTokenSize) ? compareToTokenSize : candidateTokenSize	
-		
-		candidateTokens.each { candidateToken ->
-			double bestScore = 0
-			String bestCandidate = null
-			compareToTokens.each { compareToToken ->
-				double score = compareInternal(candidateToken, compareToToken)
-				
-				if (score > bestScore){
-					bestScore = score
-					bestCandidate = compareToToken
+
+		double bestScore = -1
+		String bestCandidateToken = null
+		String bestCompareToToken = null
+		for (;bestScore != 0;){
+			bestScore = 0
+			candidateTokens.each { candidateToken ->
+				compareToTokens.each { compareToToken ->
+					double score = compareInternal(candidateToken, compareToToken)
+					
+					if (score > bestScore){
+						bestScore = score
+						bestCandidateToken = candidateToken
+						bestCompareToToken = compareToToken
+					}
 				}
 			}
 			totalScore = totalScore + bestScore
-			compareToTokens.remove(bestCandidate)
+			compareToTokens.remove(bestCompareToToken)
+			candidateTokens.remove(bestCandidateToken)
 		}
-	
 		
 		return (totalScore / bestPossibleScore) * 100		
 	}
@@ -75,5 +80,5 @@ class FuzzyStringComparator {
 		}
 		return retList
 	}
-
+	
 }
